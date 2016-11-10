@@ -1,3 +1,5 @@
+package exercises;
+
 import mpi.*;
 
 import java.util.ArrayList;

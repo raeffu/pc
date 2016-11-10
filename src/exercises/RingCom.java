@@ -1,3 +1,5 @@
+package exercises;
+
 import java.io.Serializable;
 
 import mpi.MPI;

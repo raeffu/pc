@@ -1,4 +1,4 @@
-
+package exercises;
 
 import java.io.Serializable;
 

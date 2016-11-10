@@ -1,3 +1,5 @@
+package exercises;
+
 import mpi.MPI;
 import mpi.Request;
 
