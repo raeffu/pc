@@ -7,9 +7,9 @@ public class RingSum {
     int rank;
     int size;
     int source;
-    int outBuffer[] = new int[1];
+    int sum[] = new int[1];
 
-    outBuffer[0] = 0;
+    sum[0] = 0;
 
     MPI.Init(args);
 
@@ -19,16 +19,17 @@ public class RingSum {
     if(source < 0)
       source = size - 1;
 
-    Request recvHandle = MPI.COMM_WORLD.Irecv(outBuffer, 0, outBuffer.length, MPI.INT, source, MPI.ANY_TAG);
+    Request recvHandle = MPI.COMM_WORLD.Irecv(sum, 0, sum.length, MPI.INT, source, MPI.ANY_TAG);
     if(rank != 0)
     {
       recvHandle.Wait();
-      outBuffer[0] += rank;
+      sum[0] += rank;
     }
-    MPI.COMM_WORLD.Isend(outBuffer, 0, outBuffer.length, MPI.INT, (rank + 1) % size, MPI.ANY_TAG);
+
+    MPI.COMM_WORLD.Isend(sum, 0, sum.length, MPI.INT, ((rank + 1) % size), MPI.ANY_TAG);
 
     if(rank == size - 1)
-      System.out.println(outBuffer[0]);
+      System.out.println(sum[0]);
 
     MPI.Finalize();
   }
