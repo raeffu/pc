@@ -7,7 +7,8 @@ import java.util.Random;
  * Created by rlaubscher on 10.11.16.
  */
 public class Pancake {
-  static int[] numbers = {8, 5, 3, 7, 2, 9, 4, 10, 1, 6};
+  static int N = 70;
+  static int[] numbers = new int[N];
   static int flipCount = 0;
 
   // n: n elements are left to sort
@@ -77,14 +78,22 @@ public class Pancake {
     return new int[] {posMin, posMax};
   }
   public static void main(String[] args) {
+    for (int i = 1; i <= N; i++) {
+      numbers[i-1] = i;
+    }
+
     shuffleArray(numbers);
     System.out.println("initial configuration:");
     System.out.println(Arrays.toString(numbers) + "\n");
 
+    long start = System.currentTimeMillis();
     pancakeSort(numbers.length, 1);
+    long end = System.currentTimeMillis();
 
     System.out.format("\nSorted after %d flips\n", flipCount);
     System.out.println(Arrays.toString(numbers));
+
+    System.out.format("Time: %dms", end - start);
   }
 
   public static void shuffleArray(int[] a) {
