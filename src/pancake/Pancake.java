@@ -1,97 +1,87 @@
 package pancake;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by rlaubscher on 10.11.16.
  */
 public class Pancake {
-  static int N = 70;
-  static int[] numbers = new int[N];
-  static int flipCount = 0;
+  static int N = 30;
+//  static int[] numbers = new int[N];
+  static int[] numbers = {7, 18, 14, 1, 4, 26, 25, 22, 13, 2, 23, 3, 6, 19, 12, 5, 21, 27, 9, 10, 15, 30, 17, 11, 28, 24, 8, 20, 29, 16};
+  static Node root = new Node(numbers, 0, null, "");
+//  static int flipCount = 0;
 
-  // n: n elements are left to sort
-  // dir: sorting direction. 1 = ASC, 0 = DESC
-  public static void pancakeSort(int n, int dir) {
-    if(n == 0)
-      return;
-
-    int[] minMax = minmax(n); // [min, max]
-    int highest = minMax[dir];
-    int lowest = minMax[1 - dir];
-    boolean flipped = false; // true if sorting direction changed
-
-    // highest already at right position
-    if(highest == n - 1) {
-      n--;
-    }
-    // highest at front
-    else if(highest == 0) {
-      flip(n - 1);
-      n--;
-    }
-    // lowest is at end, change sorting direction
-    else if(lowest == n - 1) {
-      dir = 1 - dir;
-      n--;
-      flipped = true;
-    }
-    // flip at position of highest
-    else {
-      flip(highest);
-    }
-    pancakeSort(n, dir);
-
-    // flip back where we changed sorting order
-    if(flipped) {
-      flip(n);
-    }
-  }
-
-  public static void flip(int k) {
-    for (int i = 0; i < (k + 1) / 2; ++i) {
-      int tmp = numbers[i];
-      numbers[i] = numbers[k - i];
-      numbers[k - i] = tmp;
-    }
-    flipCount++;
-    System.out.println("flip(0.." + k + "): " + Arrays.toString(numbers));
-  }
-
-  // returns [min, max]
-  public static int[] minmax(int n) {
-    int min = numbers[0];
-    int max = numbers[0];
-    int posMin = 0, posMax = 0;
-
-    for (int i = 1; i < n; ++i) {
-      if(numbers[i] < min) {
-        min = numbers[i];
-        posMin = i;
+  public static Node solve(Node root) {
+    Node solutionNode = null;
+    int bound = root.getOptimisticDistanceToSolution();
+    // 10 ist ein willkürlich gewählter Faktor zur Begrenzung der Suche
+    int maxBound = 2 * N;
+    while (solutionNode == null) {
+      SearchResult r = search(root, bound);
+      if (r.solutionNode != null) {
+        solutionNode = r.solutionNode;
       }
-      else if(numbers[i] > max) {
-        max = numbers[i];
-        posMax = i;
+      if (r.bound >= maxBound) {
+        return null;
+      }
+      bound = r.bound;
+    }
+    return solutionNode;
+  }
+
+  static SearchResult search(Node node, int bound) {
+    int f = node.getDepth() + node.getOptimisticDistanceToSolution();
+    if (f > bound) {
+      return new SearchResult(f);
+    }
+    if (node.isSolution()) {
+      return new SearchResult(node);
+    }
+    int min = Integer.MAX_VALUE;
+    List<Node> successors = node.nextNodes();
+    for (Node succ : successors) {
+      SearchResult r = search(succ, bound);
+      if (r.solutionNode != null) {
+        return r;
+      }
+      if (r.bound < min) {
+        min = r.bound;
       }
     }
-    return new int[] {posMin, posMax};
+    return new SearchResult(min);
   }
+
+//  public static void flip(int k) {
+//    for (int i = 0; i < (k + 1) / 2; ++i) {
+//      int tmp = numbers[i];
+//      numbers[i] = numbers[k - i];
+//      numbers[k - i] = tmp;
+//    }
+//    flipCount++;
+//    System.out.println("flip(0.." + k + "): " + Arrays.toString(numbers));
+//  }
+
   public static void main(String[] args) {
-    for (int i = 1; i <= N; i++) {
-      numbers[i-1] = i;
-    }
+//    for (int i = 1; i <= N; i++) {
+//      numbers[i-1] = i;
+//    }
+//    System.out.println(Arrays.toString(numbers));
+//    shuffleArray(numbers);
+//    System.out.println(Arrays.toString(numbers));
 
-    shuffleArray(numbers);
     System.out.println("initial configuration:");
     System.out.println(Arrays.toString(numbers) + "\n");
 
     long start = System.currentTimeMillis();
-    pancakeSort(numbers.length, 1);
+    Node solution = solve(root);
     long end = System.currentTimeMillis();
 
-    System.out.format("\nSorted after %d flips\n", flipCount);
-    System.out.println(Arrays.toString(numbers));
+    System.out.println(solution.getSteps());
+    System.out.format("\nSorted after %d flips\n", solution.getDepth());
+    System.out.println(Arrays.toString(solution.getState()));
 
     System.out.format("Time: %dms", end - start);
   }

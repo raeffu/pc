@@ -1,2 +1,5 @@
 mpj-v0_44/
 out/
+.idea/
+*.iml
+/src/pancake/Slave.java

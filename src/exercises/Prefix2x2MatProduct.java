@@ -2,7 +2,8 @@ package exercises;
 
 import java.util.Arrays;
 
-public class Prefix2x2MatProduct {
+public class
+Prefix2x2MatProduct {
   // each Matrix has the Form:
   //  / a    b \
   //  |        |

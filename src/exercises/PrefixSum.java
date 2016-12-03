@@ -37,7 +37,7 @@ public class PrefixSum {
       }
       // in a PRAM program i would be the processor number
       // and we would have the statement
-      // if (i<2^h) a[i]=a[i]-a[i-2^h]
+      // if (i<2^h) a[i]=a[i] + a[i-2^h]
       //------------------------------------------------
 
       a = copy(a_); // simulate memory write-back
