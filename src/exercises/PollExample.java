@@ -37,7 +37,6 @@ public class PollExample {
       }
       catch (InterruptedException e)
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       if(rand.nextInt(waitTime) < chance * waitTime && (System.currentTimeMillis() - sTime < duration - limit))

@@ -1,16 +1,13 @@
 package pancake;
 
-import com.sun.tools.javac.util.ArrayUtils;
-
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 /**
  * Created by rlaubscher on 11.11.16.
  */
-public class Node {
+public class Node implements Serializable {
   private int[] state;
   private int depth;
   private String steps;

@@ -1,11 +1,12 @@
 package pancake;
 
+import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 
 /**
  * Created by rlaubscher on 11.11.16.
  */
-public class SearchResult {
+public class SearchResult implements Serializable {
   Node solutionNode;
   int bound;
 
@@ -15,5 +16,14 @@ public class SearchResult {
 
   public SearchResult(int bound){
     this.bound = bound;
+  }
+
+  @Override public String toString() {
+    if (solutionNode != null) {
+      return solutionNode.toString() + ", bound: " + this.bound;
+    }
+    else{
+      return "no solution, bound: " + this.bound;
+    }
   }
 }

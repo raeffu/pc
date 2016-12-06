@@ -3,7 +3,7 @@ package pancake;
 import mpi.MPI;
 import mpi.Request;
 
-import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by rlaubscher on 27.11.16.
@@ -11,11 +11,11 @@ import java.util.List;
 public class ResultListener extends Thread {
   private boolean running = true;
   private int slave;
-  private List<SearchResult> results;
+  private LinkedBlockingQueue<Result> results;
 
   private static final long WAIT_TIME = 5;
 
-  public ResultListener(int slave, List<SearchResult> results) {
+  public ResultListener(int slave, LinkedBlockingQueue<Result> results) {
     this.slave = slave;
     this.results = results;
   }
@@ -28,7 +28,7 @@ public class ResultListener extends Thread {
 
   private void listen() {
     SearchResult[] result = new SearchResult[1];
-    Request request = MPI.COMM_WORLD.Irecv(result, 0, 0, MPI.INT, this.slave, Master.RESULT_TAG);
+    Request request = MPI.COMM_WORLD.Irecv(result, 0, 1, MPI.OBJECT, this.slave, Master.RESULT_TAG);
 
     while (request.Test() == null) {
       if(!running)
@@ -42,7 +42,13 @@ public class ResultListener extends Thread {
       }
     }
 
-    results.add(result[0]);
+    try {
+      System.out.println("SearchResult " + result[0].solutionNode);
+      results.put(new Result(this.slave, result[0]));
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public void stopListening() {

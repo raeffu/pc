@@ -3,8 +3,7 @@ package pancake;
 import mpi.MPI;
 import mpi.Request;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by rlaubscher on 26.11.16.
@@ -13,11 +12,11 @@ public class IdleListener extends Thread {
   private boolean running = true;
   private int[] no_data = new int[0];
   private int slave;
-  private Stack<Integer> idleWorkers;
+  private LinkedBlockingQueue<Integer> idleWorkers;
 
   private static final long WAIT_TIME = 5;
 
-  public IdleListener(int slave, Stack<Integer> idleWorkers) {
+  public IdleListener(int slave, LinkedBlockingQueue<Integer> idleWorkers) {
     this.slave = slave;
     this.idleWorkers = idleWorkers;
   }
@@ -29,7 +28,7 @@ public class IdleListener extends Thread {
   }
 
   private void listen() {
-    Request request = MPI.COMM_WORLD.Irecv(this.no_data, 0, 0, MPI.INT, this.slave, Master.IDLE_TAG);
+    Request request = MPI.COMM_WORLD.Irecv(this.no_data, 0, 1, MPI.INT, this.slave, Master.IDLE_TAG);
 
     while (request.Test() == null) {
       if(!running)
@@ -43,7 +42,12 @@ public class IdleListener extends Thread {
       }
     }
 
-    idleWorkers.push(this.slave);
+    try {
+      idleWorkers.put(this.slave);
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public void stopListening() {
