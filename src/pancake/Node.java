@@ -10,19 +10,15 @@ import java.util.Stack;
 public class Node implements Serializable {
   private int[] state;
   private int depth;
-  private String steps;
   private Node parent;
   private int gap;
 //  private int flipCount;
 
-  public Node(int[] state, int depth, Node parent, String steps){
+  public Node(int[] state, int depth, Node parent){
     this.state = state;
     this.depth = depth;
     this.parent = parent;
     this.gap = -1;
-    if (parent != null) {
-      this.steps = steps + "\n" + Arrays.toString(parent.getState());
-    }
 //    this.flipCount = flipCount;
   }
 
@@ -65,7 +61,7 @@ public class Node implements Serializable {
     Stack<Node> successors = new Stack();
     for(int i=1; i < state.length; i++){
       int[] child = flip(state, i);
-      successors.push(new Node(child, this.depth+1, this, this.steps));
+      successors.push(new Node(child, this.depth+1, this));
     }
     return successors;
   }
@@ -83,10 +79,6 @@ public class Node implements Serializable {
 
   public int[] getState() {
     return state;
-  }
-
-  public String getSteps() {
-    return steps;
   }
 
   public String toString() {

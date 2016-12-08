@@ -24,6 +24,13 @@ public class ResultListener extends Thread {
     while(running) {
       listen();
     }
+
+    try {
+      this.join();
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   private void listen() {
@@ -43,7 +50,7 @@ public class ResultListener extends Thread {
     }
 
     try {
-      System.out.println("SearchResult " + result[0].solutionNode);
+//      System.out.println("SearchResult " + result[0].solutionNode);
       results.put(new Result(this.slave, result[0]));
     }
     catch (InterruptedException e) {

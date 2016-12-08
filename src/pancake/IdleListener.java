@@ -25,6 +25,13 @@ public class IdleListener extends Thread {
     while(running) {
       listen();
     }
+
+    try {
+      this.join();
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   private void listen() {
