@@ -1,7 +1,6 @@
-package pancake;
+package pancake.parallel;
 
 import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
 
 /**
  * Created by rlaubscher on 11.11.16.

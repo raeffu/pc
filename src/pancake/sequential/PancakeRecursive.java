@@ -1,4 +1,7 @@
-package pancake;
+package pancake.sequential;
+
+import pancake.Node;
+import pancake.SearchResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,10 +10,11 @@ import java.util.Random;
 /**
  * Created by rlaubscher on 10.11.16.
  */
-public class Pancake {
-  static int N = 40;
-  static int[] numbers = new int[N];
+public class PancakeRecursive {
+  static int N = 15;
+//  static int[] numbers = new int[N];
 //  static int[] numbers = {7, 18, 14, 1, 4, 26, 25, 22, 13, 2, 23, 3, 6, 19, 12, 5, 21, 27, 9, 10, 15, 30, 17, 11, 28, 24, 8, 20, 29, 16};
+  static int[] numbers = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 15};
   static Node root = new Node(numbers, 0, null);
 //  static int flipCount = 0;
 
@@ -65,12 +69,12 @@ public class Pancake {
 //  }
 
   public static void main(String[] args) {
-    for (int i = 1; i <= N; i++) {
-      numbers[i-1] = i;
-    }
-    System.out.println(Arrays.toString(numbers));
-    shuffleArray(numbers);
-    System.out.println(Arrays.toString(numbers));
+//    for (int i = 1; i <= N; i++) {
+//      numbers[i-1] = i;
+//    }
+//    System.out.println(Arrays.toString(numbers));
+//    shuffleArray(numbers);
+//    System.out.println(Arrays.toString(numbers));
 
     System.out.println("initial configuration:");
     System.out.println(Arrays.toString(numbers) + "\n");

@@ -1,4 +1,4 @@
-package pancake;
+package pancake.parallel;
 
 import mpi.MPI;
 

@@ -1,8 +1,7 @@
-package pancake;
+package pancake.parallel;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Stack;
 
 /**
@@ -21,6 +20,7 @@ public class Node implements Serializable {
     this.depth = depth;
     this.parent = parent;
     this.gap = -1;
+    this.getOptimisticDistanceToSolution();
 //    this.flipCount = flipCount;
   }
 
