@@ -1,7 +1,7 @@
 package pancake.sequential;
 
-import pancake.Node;
-import pancake.SearchResult;
+import pancake.parallel.Node;
+import pancake.parallel.SearchResult;
 
 import java.util.Arrays;
 import java.util.List;

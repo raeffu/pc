@@ -1,6 +1,6 @@
 package pancake.sequential;
 
-import pancake.Node;
+import pancake.parallel.Node;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -10,7 +10,11 @@ import java.util.Stack;
  */
 public class PancakeIterative {
 
-  static final String MODE = "SOLVE";
+  public enum Modes {
+    solve, count
+  }
+
+  static final Modes MODE = Modes.solve;
 
   static int N = 15;
   static int[] numbers = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 15};
@@ -23,7 +27,7 @@ public class PancakeIterative {
     newState[newState.length - 1] = root.getState().length + 1;
     root.setState(newState);
 
-    if(MODE.equals("COUNT")) {
+    if(MODE == Modes.count) {
       count(root);
     }
     else {

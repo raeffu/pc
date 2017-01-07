@@ -19,10 +19,10 @@ public class SearchResult implements Serializable {
 
   @Override public String toString() {
     if (solutionNode != null) {
-      return solutionNode.toString() + ", bound: " + this.bound;
+      return solutionNode.toString() + ", next bound: " + this.bound;
     }
     else{
-      return "no solution, bound: " + this.bound;
+      return "no solution, next bound: " + this.bound;
     }
   }
 }

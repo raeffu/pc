@@ -1,24 +1,24 @@
-package pancake;
+package pancake.parallel.count;
 
 import mpi.MPI;
 import mpi.Request;
+import pancake.parallel.Master;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Created by rlaubscher on 26.11.16.
+ * Created by rlaubscher on 27.11.16.
  */
-public class IdleListener extends Thread {
+public class ResultListener extends Thread {
   private boolean running = true;
-  private int[] no_data = new int[0];
   private int slave;
-  private LinkedBlockingQueue<Integer> idleWorkers;
+  private LinkedBlockingQueue<Result> results;
 
   private static final long WAIT_TIME = 5;
 
-  public IdleListener(int slave, LinkedBlockingQueue<Integer> idleWorkers) {
+  public ResultListener(int slave, LinkedBlockingQueue<Result> results) {
     this.slave = slave;
-    this.idleWorkers = idleWorkers;
+    this.results = results;
   }
 
   @Override public void run() {
@@ -35,7 +35,8 @@ public class IdleListener extends Thread {
   }
 
   private void listen() {
-    Request request = MPI.COMM_WORLD.Irecv(this.no_data, 0, 1, MPI.INT, this.slave, Master.IDLE_TAG);
+    CountResult[] result = new CountResult[1];
+    Request request = MPI.COMM_WORLD.Irecv(result, 0, 1, MPI.OBJECT, this.slave, Master.RESULT_TAG);
 
     while (request.Test() == null) {
       if(!running)
@@ -50,7 +51,8 @@ public class IdleListener extends Thread {
     }
 
     try {
-      idleWorkers.put(this.slave);
+//      System.out.println("CountResult " + result[0].solutionNode);
+      results.put(new Result(this.slave, result[0]));
     }
     catch (InterruptedException e) {
       e.printStackTrace();

@@ -1,6 +1,7 @@
-package pancake;
+package pancake.parallel.count;
 
 import mpi.MPI;
+import pancake.parallel.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class Master implements IWorker {
   private int[] no_data = new int[0];
   private Node root;
   private Stack<State> workStack = new Stack<>();
+  private Stack<Node> nodes = new Stack<>();
   private LinkedBlockingQueue<Integer> idleWorkers;
   private List<IdleListener> iListeners = new ArrayList<>();
   private List<ResultListener> rListeners = new ArrayList<>();
@@ -55,15 +57,15 @@ public class Master implements IWorker {
       this.slaves[i] = i + 1;
     }
 
-    // solve
+    // count
     System.out.println("initial configuration:");
     System.out.println(Arrays.toString(this.state) + "\n");
 
     long start = System.currentTimeMillis();
-    Node solution = null;
+    int count = 0;
 
     try {
-      solution = solve(this.root);
+      count = count(this.root);
     }
     catch (InterruptedException e) {
       e.printStackTrace();
@@ -71,63 +73,45 @@ public class Master implements IWorker {
 
     long end = System.currentTimeMillis();
 
-    System.out.format("\nSorted after %d flips\n", solution.getDepth());
-    System.out.format(">>>>>>> Time: %dms \n", end - start);
-    System.out.println(solution);
-    Node parent = solution.getParent();
-    while(parent != null) {
-      System.out.println(parent);
-      parent = parent.getParent();
-    }
-
-    this.iListeners.forEach(IdleListener::stopListening);
-    this.rListeners.forEach(ResultListener::stopListening);
-
     // stop workers
     for (int slave : this.slaves) {
       MPI.COMM_WORLD.Isend(this.no_data, 0, 0, MPI.INT, slave, Master.KILL_TAG);
     }
 
+    this.iListeners.forEach(IdleListener::stopListening);
+    this.rListeners.forEach(ResultListener::stopListening);
+
+    System.out.format("\nFound %d solutions\n", count);
+    System.out.format(">>>>>>> Time: %dms \n", end - start);
+
   }
 
-  private Node solve(Node root) throws InterruptedException {
-    Node solutionNode = null;
+  private int count(Node root) throws InterruptedException {
+    if(root.isSolution()) return 1;
+    boolean solutionFound = false;
     int bound = root.getOptimisticDistanceToSolution();
-    int maxBound = 2 * root.getState().length;
 
-    Stack<Node> children = root.nextNodes();
-    workStack.push(new State(root, children, bound));
-
-    System.out.println("roots children");
-    for (Node child : children) {
-      System.out.println(child);
-    }
-
-    while (bound < maxBound) {
-      nAnswers = 0;
+    while (!solutionFound) {
+      int count = 0;
       this.results.clear();
-      State current = workStack.pop();
-      Node node = current.getNode();
-      Stack<Node> successors = current.getChildren();
-      int currentBound = current.getBound();
+      nAnswers = 0;
+      int nextBound = Integer.MAX_VALUE;
+      root.nextNodes();
 
-      System.out.println("currentBound: " + currentBound);
-
-      for (Node succ : successors) {
-        // send work
-        while (idleWorkers.size() < 1) {
-          try {
-            System.out.println("No idle workers");
-            Thread.sleep(5);
-          }
-          catch (InterruptedException e) {
-            e.printStackTrace();
-          }
+      while (!root.getSuccessors().empty()) {
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        stack.push(root.getSuccessors().pop());
+        stack.peek().nextNodes();
+        if (stack.peek().isSolution()) {
+          return 1;
         }
+
         Integer worker = idleWorkers.take();
-        WorkSet work = new WorkSet(succ, currentBound);
+        WorkSet work = new WorkSet(stack, bound);
         WorkSet[] workBuffer = new WorkSet[] {work};
-        System.out.println("Send work to slave " + worker + ": " + workBuffer[0].getNode().toString());
+
+        System.out.println("Send work to slave " + worker + ": " + workBuffer[0].getStack().peek());
         MPI.COMM_WORLD.Isend(workBuffer, 0, 1, MPI.OBJECT, worker, Master.WORK_TAG);
         nAnswers++;
       }
@@ -136,38 +120,28 @@ public class Master implements IWorker {
       System.out.println("receive result");
 
       while (this.results.size() < nAnswers) {
-        while (this.results.isEmpty()) {
-          try {
-            System.out.println("sleep");
-            Thread.sleep(WAIT_TIME);
-          }
-          catch (InterruptedException e) {
-            e.printStackTrace();
-          }
+        Result result = this.results.take();
+        nAnswers--;
+        CountResult r = result.getCountResult();
+        int slave = result.getSlave();
+        System.out.println("Count Result, received by Master from " + slave + ": " + r);
+        if(r.count != 0) {
+          System.out.println("\nSolution found, increase counter!\n");
+          count += r.count;
         }
-
-        for (Result result : results) {
-          SearchResult r = result.getSearchResult();
-          int slave = result.getSlave();
-          System.out.println("Search Result, received by Master from " + slave + ": " + r.toString());
-
-          if(r.solutionNode != null) {
-            System.out.println("\nSolution found, stop all the shit!\n");
-            return r.solutionNode;
-          }
-        }
-
+        nextBound = Math.min(nextBound, r.bound);
       }
+
+      // all solutions counted for this bound
+      if (count > 0) {
+        return count;
+      }
+
       // no solution found
-      System.out.println(">>>>>>>>>>>>> increment bound");
-      bound++;
-      workStack.push(new State(root, children, bound));
-
+      System.out.println(">>>>>>>>>>>>> new bound: " + nextBound);
+      bound = nextBound;
     }
-
-    // go back in stack if no result found
-
-    return solutionNode;
+    return 0;
   }
 
 }
