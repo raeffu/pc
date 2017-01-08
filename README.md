@@ -18,6 +18,7 @@ package: `pancake.parallel`
 * `PancakeParallel.java` has to be run through MPJ:
 
 Main class: `runtime.starter.MPJRun`
+
 VM options: `-jar <MPJ_HOME>/mpj-v0_44/lib/starter.jar pancake.parallel.PancakeParallel -np <number of processors>`
 
 or via terminal: `<MPJ_HOME>/bin/mpjrun.sh pancake.parallel.PancakeParallel -np <number of processors>`
