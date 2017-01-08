@@ -1,6 +1,6 @@
 # Parallel Computing - pancake sorting
 
-Finds the optimal / shortest solution for sorting a pancake stack with IDA*.
+Finds the optimal / shortest solution for sorting a pancake stack with IDA Star.
 Can also count the number of all **optimal** solutions.
 
 ## Installation
