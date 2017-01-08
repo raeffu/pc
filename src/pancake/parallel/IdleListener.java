@@ -5,9 +5,6 @@ import mpi.Request;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by rlaubscher on 26.11.16.
- */
 public class IdleListener extends Thread {
   private boolean running = true;
   private int[] no_data = new int[0];

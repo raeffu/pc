@@ -5,9 +5,6 @@ import mpi.Request;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by rlaubscher on 27.11.16.
- */
 public class ResultListener extends Thread {
   private boolean running = true;
   private int slave;
@@ -50,7 +47,6 @@ public class ResultListener extends Thread {
     }
 
     try {
-//      System.out.println("SearchResult " + result[0].solutionNode);
       results.put(new Result(this.slave, result[0]));
     }
     catch (InterruptedException e) {

@@ -2,9 +2,6 @@ package pancake.parallel.count;
 
 import java.io.Serializable;
 
-/**
- * Created by rlaubscher on 11.11.16.
- */
 public class CountResult implements Serializable {
   public int count;
   public int bound;

@@ -6,9 +6,6 @@ import pancake.parallel.Master;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by rlaubscher on 27.11.16.
- */
 public class ResultListener extends Thread {
   private boolean running = true;
   private int slave;

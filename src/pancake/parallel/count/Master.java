@@ -10,7 +10,7 @@ import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Created by rlaubscher on 20.11.16.
+ * Created by Raphael Laubscher (laubr2)
  * Parallel Pancake sorting
  */
 public class Master implements IWorker {
@@ -19,28 +19,21 @@ public class Master implements IWorker {
   public static final int WORK_TAG = 20;
   public static final int KILL_TAG = 66;
   public static final int RESULT_TAG = 30;
-  private int[] state;
   private int nSlaves;
   private int[] slaves;
   private int[] no_data = new int[0];
   private Node root;
-  private Stack<State> workStack = new Stack<>();
-  private Stack<Node> nodes = new Stack<>();
   private LinkedBlockingQueue<Integer> idleWorkers;
   private List<IdleListener> iListeners = new ArrayList<>();
   private List<ResultListener> rListeners = new ArrayList<>();
   private LinkedBlockingQueue<Result> results = new LinkedBlockingQueue<>();
   private int nAnswers = 0;
-  private static final long WAIT_TIME = 5;
 
   public Master(int[] state, int nSlaves) {
-    this.state = state;
     this.nSlaves = nSlaves;
     this.slaves = new int[nSlaves];
     this.root = new Node(state, 0, null);
-//    int[] newState = Arrays.copyOf(root.getState(), root.getState().length + 1);
-//    newState[newState.length - 1] = root.getState().length + 1;
-//    root.setState(newState);
+    this.root.addPlate();
   }
 
   @Override public void run() {
@@ -57,9 +50,7 @@ public class Master implements IWorker {
       this.slaves[i] = i + 1;
     }
 
-    // count
-    System.out.println("initial configuration:");
-    System.out.println(Arrays.toString(this.state) + "\n");
+    // COUNT
 
     long start = System.currentTimeMillis();
     int count = 0;
@@ -81,9 +72,12 @@ public class Master implements IWorker {
     this.iListeners.forEach(IdleListener::stopListening);
     this.rListeners.forEach(ResultListener::stopListening);
 
-    System.out.format("\nFound %d solutions\n", count);
-    System.out.format(">>>>>>> Time: %dms \n", end - start);
-
+    System.out.println("\n\n\n\n");
+    System.out.println("########## FINISHED ##########\n");
+    System.out.format("Time: %dms\n", end - start);
+    System.out.format("Initial state: %s\n", root);
+    System.out.format("Number of optimal solutions: %d\n", count);
+    System.exit(0);
   }
 
   private int count(Node root) throws InterruptedException {

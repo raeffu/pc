@@ -2,9 +2,6 @@ package pancake.parallel;
 
 import java.io.Serializable;
 
-/**
- * Created by rlaubscher on 11.11.16.
- */
 public class SearchResult implements Serializable {
   public Node solutionNode;
   public int bound;

@@ -10,15 +10,14 @@ import pancake.parallel.WorkSet;
 import java.util.Stack;
 
 /**
- * Created by rlaubscher on 20.11.16.
+ * Created by Raphael Laubscher (laubr2)
+ * Parallel Pancake sorting
  */
 public class Slave implements IWorker {
 
   private int rank;
   private int[] no_data = new int[0];
   private Request stopSignal;
-
-  private static final long WAIT_TIME = 5;
 
   public Slave(int rank) {
     this.rank = rank;
@@ -54,11 +53,11 @@ public class Slave implements IWorker {
     int count = 0;
     int solutionBound = 0;
     boolean solutionFound = false;
-    int nextcb = bound;
+    int nextBound = bound;
 
     while(stopSignal.Test() == null) {
-      int cb = nextcb;
-      nextcb = Integer.MAX_VALUE;
+      int currentBound = nextBound;
+      nextBound = Integer.MAX_VALUE;
       int depth = stack.peek().getDepth();
 
       while(depth > 0 && depth <= bound){
@@ -69,7 +68,7 @@ public class Slave implements IWorker {
         else {
           Node nextChild = stack.peek().getSuccessors().pop();
           int cost = nextChild.getDepth() + nextChild.getOptimisticDistanceToSolution();
-          if (cost <= cb){
+          if (cost <= currentBound){
             if (nextChild.isSolution()){
               solutionFound = true;
               solutionBound = nextChild.getDepth();
@@ -82,17 +81,15 @@ public class Slave implements IWorker {
             }
           }
           else {
-            nextcb = Math.min(nextcb, cost);
+            nextBound = Math.min(nextBound, cost);
           }
         }
       }
       System.out.println("Slave " + this.rank + " found no solution with bound " + bound);
-      System.out.println("Slave " + this.rank + " returns new bound " + nextcb);
-      return new CountResult(count, nextcb);
+      System.out.println("Slave " + this.rank + " returns new bound " + nextBound);
+      return new CountResult(count, nextBound);
     }
-    System.out.println("Slave " + this.rank + " found no solution with bound " + bound);
-    System.out.println("Slave " + this.rank + " returns new bound " + nextcb);
-    return new CountResult(count, nextcb);
+    return new CountResult(count, nextBound);
   }
 
   private void reportIdleWorker() {

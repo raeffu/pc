@@ -1,8 +1,5 @@
 package pancake.parallel;
 
-/**
- * Created by rlaubscher on 03.12.16.
- */
 public class Result {
 
   private int slave;

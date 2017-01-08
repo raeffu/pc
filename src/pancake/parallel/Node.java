@@ -4,16 +4,12 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Stack;
 
-/**
- * Created by rlaubscher on 11.11.16.
- */
 public class Node implements Serializable {
   private int[] state;
   private int depth;
   private Node parent;
   private int gap;
   private Stack<Node> successors = new Stack();
-//  private int flipCount;
 
   public Node(int[] state, int depth, Node parent){
     this.state = state;
@@ -21,7 +17,6 @@ public class Node implements Serializable {
     this.parent = parent;
     this.gap = -1;
     this.getOptimisticDistanceToSolution();
-//    this.flipCount = flipCount;
   }
 
   public int getDepth(){
@@ -81,7 +76,6 @@ public class Node implements Serializable {
       pancake[i] = pancake[k - i];
       pancake[k - i] = tmp;
     }
-//    this.flipCount++;
     return pancake;
   }
 
@@ -91,12 +85,18 @@ public class Node implements Serializable {
 
   public void setState(int[] state) { this.state = state;}
 
-  public String toString() {
-    return Arrays.toString(this.state);
+  // only to be called for root node
+  public void addPlate() {
+    int[] newState = Arrays.copyOf(this.state, this.state.length + 1);
+    newState[newState.length - 1] = this.state.length + 1;
+    this.state = newState;
   }
-  //  public int getFlipCount() {
-//    return flipCount;
-//  }
+
+  public String toString() {
+    int[] state = Arrays.copyOf(this.state, this.state.length - 1);
+    return Arrays.toString(state);
+  }
+
   public Stack<Node> getSuccessors() {
     return this.successors;
   }

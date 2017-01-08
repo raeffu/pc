@@ -1,21 +1,19 @@
 package pancake.parallel;
 
-import com.sun.org.apache.xml.internal.serializer.utils.SerializerMessages_zh_CN;
 import mpi.MPI;
 import mpi.Request;
 
 import java.util.Stack;
 
 /**
- * Created by rlaubscher on 20.11.16.
+ * Created by Raphael Laubscher (laubr2)
+ * Parallel Pancake sorting
  */
 public class Slave implements IWorker {
 
   private int rank;
   private int[] no_data = new int[0];
   private Request solutionFound;
-
-  private static final long WAIT_TIME = 5;
 
   public Slave(int rank) {
     this.rank = rank;
@@ -48,11 +46,11 @@ public class Slave implements IWorker {
   }
 
   private SearchResult search(Stack<Node> stack, int bound) {
-    int nextcb = bound;
+    int nextBound = bound;
 
     while(solutionFound.Test() == null) {
-      int cb = nextcb;
-      nextcb = Integer.MAX_VALUE;
+      int currentBound = nextBound;
+      nextBound = Integer.MAX_VALUE;
       int depth = stack.peek().getDepth();
 
       while(depth > 0 && depth <= bound){
@@ -63,7 +61,7 @@ public class Slave implements IWorker {
         else {
           Node nextChild = stack.peek().getSuccessors().pop();
           int cost = nextChild.getDepth() + nextChild.getOptimisticDistanceToSolution();
-          if (cost <= cb){
+          if (cost <= currentBound){
             if (nextChild.isSolution()){
               return new SearchResult(nextChild);
             }
@@ -72,17 +70,15 @@ public class Slave implements IWorker {
             depth++;
           }
           else {
-            nextcb = Math.min(nextcb, cost);
+            nextBound = Math.min(nextBound, cost);
           }
         }
       }
       System.out.println("Slave " + this.rank + " found no solution with bound " + bound);
-      System.out.println("Slave " + this.rank + " returns new bound " + nextcb);
-      return new SearchResult(nextcb);
+      System.out.println("Slave " + this.rank + " returns new bound " + nextBound);
+      return new SearchResult(nextBound);
     }
-    System.out.println("Slave " + this.rank + " found no solution with bound " + bound);
-    System.out.println("Slave " + this.rank + " returns new bound " + nextcb);
-    return new SearchResult(nextcb);
+    return new SearchResult(nextBound);
   }
 
   private void reportIdleWorker() {
