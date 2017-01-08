@@ -1,5 +1,8 @@
 # Parallel Computing - pancake sorting
 
+Finds the optimal / shortest solution for sorting a pancake stack with IDA*.
+Can also count the number of all **optimal** solutions.
+
 ## Installation
 * Download and install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * Download and install [MPJ](http://mpj-express.org). Tested with version v0.44.
