@@ -7,11 +7,16 @@
 
 ## Running
 ### Sequential Sorters
+package: `pancake.sequential`
+
 * `PancakeRecursive.java` is a recursive implementation. Run the `main()` method.
 * `PancakeIterative.java` is a iterative implementation. Run the `main()` method.
 
 ### Parallel Sorter
+package: `pancake.parallel`
+
 * `PancakeParallel.java` has to be run through MPJ:
+
 Main class: `runtime.starter.MPJRun`
 VM options: `-jar <MPJ_HOME>/mpj-v0_44/lib/starter.jar pancake.parallel.PancakeParallel -np <number of processors>`
 
@@ -19,6 +24,7 @@ or via terminal: `<MPJ_HOME>/bin/mpjrun.sh pancake.parallel.PancakeParallel -np 
 
 ## Configuration
 In the parallel and sequential programs you can set the following:
+
 * `MODE` set mode to SOLVE or COUNT
 * `N` length of pankcake stack
 * `numbers`:  pankcake stack to solve, can be initialized as follows
