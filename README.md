@@ -29,7 +29,7 @@ or via terminal: `<MPJ_HOME>/bin/mpjrun.sh pancake.parallel.PancakeParallel -np 
 ## Configuration
 In the parallel and sequential programs you can set the following:
 
-* `MODE` set mode to SOLVE or COUNT
+* `MODE` set mode to SOLVE or COUNT. COUNT counts the **optimal** solutions.
 * `N` length of pankcake stack
 * `numbers`:  pankcake stack to solve, can be initialized as follows
   - enter array manually

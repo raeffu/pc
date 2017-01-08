@@ -6,7 +6,7 @@ import pancake.Utility;
 /**
  * Created by Raphael Laubscher (laubr2)
  *
- * MODE: set mode to SOLVE or COUNT
+ * MODE: set mode to SOLVE or COUNT. COUNT counts the optimal solutions.
  * N: length of pankcake stack
  * numbers:  select between 3 options
  *           - enter array manually
