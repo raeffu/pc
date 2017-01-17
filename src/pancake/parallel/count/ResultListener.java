@@ -48,7 +48,6 @@ public class ResultListener extends Thread {
     }
 
     try {
-//      System.out.println("CountResult " + result[0].solutionNode);
       results.put(new Result(this.slave, result[0]));
     }
     catch (InterruptedException e) {

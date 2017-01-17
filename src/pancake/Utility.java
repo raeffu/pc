@@ -56,7 +56,7 @@ public class Utility {
 
   private static String stateToString(int[] state, int flip) {
     String result = "";
-    int n = state.length - 1;
+    int n = state.length;
     for (int i = 0; i < n; i++) {
       if(flip == i) {
         if (i == n - 1)

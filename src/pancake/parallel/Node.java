@@ -93,7 +93,6 @@ public class Node implements Serializable {
   }
 
   public String toString() {
-    int[] state = Arrays.copyOf(this.state, this.state.length - 1);
     return Arrays.toString(state);
   }
 

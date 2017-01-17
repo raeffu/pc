@@ -19,11 +19,11 @@ import java.util.List;
  */
 public class PancakeRecursive {
 
-  static int N = 15;
+  static int N = 14;
 //  static int[] numbers = {7, 18, 14, 1, 4, 26, 25, 22, 13, 2, 23, 3, 6, 19, 12, 5, 21, 27, 9, 10, 15, 30, 17, 11, 28, 24, 8, 20, 29, 16};
-  static int[] numbers = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 15};
+//  static int[] numbers = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 15};
 //  static int[] numbers = Utility.randomOrder(N);
-//  static int[] numbers = Utility.switchedPairs(N);
+  static int[] numbers = Utility.switchedPairs(N);
 
   static Node root = new Node(numbers, 0, null);
 

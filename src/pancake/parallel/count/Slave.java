@@ -33,8 +33,6 @@ public class Slave implements IWorker {
       WorkSet[] work = new WorkSet[1];
       MPI.COMM_WORLD.Recv(work, 0, 1, MPI.OBJECT, Master.RANK, Master.WORK_TAG);
 
-      System.out.println("Slave " + this.rank + "received work from Master");
-
       // I got work to do
       Stack<Node> stack = work[0].getStack();
       int bound = work[0].getBound();
@@ -85,8 +83,6 @@ public class Slave implements IWorker {
           }
         }
       }
-      System.out.println("Slave " + this.rank + " found no solution with bound " + bound);
-      System.out.println("Slave " + this.rank + " returns new bound " + nextBound);
       return new CountResult(count, nextBound);
     }
     return new CountResult(count, nextBound);

@@ -102,20 +102,17 @@ public class Master implements IWorker {
         WorkSet work = new WorkSet(stack, bound);
         WorkSet[] workBuffer = new WorkSet[] {work};
 
-        System.out.println("Send work to slave " + worker + ": " + workBuffer[0].getStack().peek());
         MPI.COMM_WORLD.Isend(workBuffer, 0, 1, MPI.OBJECT, worker, Master.WORK_TAG);
         nAnswers++;
       }
 
       // receive result
-      System.out.println("receive result");
 
       while (this.results.size() < nAnswers) {
         Result result = this.results.take();
         nAnswers--;
         SearchResult r = result.getSearchResult();
         int slave = result.getSlave();
-        System.out.println("Search Result, received by Master from " + slave + ": " + r);
         if(r.solutionNode != null) {
           System.out.println("\nSolution found, stop all workers!\n");
           return r.solutionNode;
@@ -124,7 +121,7 @@ public class Master implements IWorker {
       }
 
       // no solution found
-      System.out.println(">>>>>>>>>>>>> new bound: " + nextBound);
+      System.out.println("search bound: " + nextBound);
       bound = nextBound;
     }
     return null;

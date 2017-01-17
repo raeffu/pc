@@ -24,8 +24,8 @@ public class PancakeIterative {
 
   static final Modes MODE = Modes.SOLVE;
 
-  static int N = 15;
-//  static int[] numbers = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 15};
+  static int N = 14; // +1 'plate' Pancake
+//  static int[] numbers = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13};
 //  static int[] numbers = {1, 2, 4, 6, 5, 3};
 //  static int[] numbers = Utility.randomOrder(N);
   static int[] numbers = Utility.switchedPairs(N);
